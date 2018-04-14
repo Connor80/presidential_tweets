@@ -2,6 +2,17 @@ h1 {
   text-align: center;
 }
 
+.column {
+    float: left;
+    width: 50%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .footer{
   position: fixed;
   text-align: left;

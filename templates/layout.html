@@ -9,8 +9,46 @@
     </head>
     <body>
         <h1>Day {{ day }} of their presidency</h1>
-        <h1>Barack Obama</h1>
-        <h1>Donald Trump<h1>
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-5">
+            <h1>Barack Obama</h1>
+            <div class="well">
+
+              {% for tweet in obamatweets %}
+              <div class="list-group">
+                 <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                   <div class="d-flex w-100 justify-content-between">
+                     <img src="{{tweet.headshot_url}}" class="w-12 p-1 float-left image-thumbnail">
+                     <h5 class="ml-10 w-75 mb-1">{{ tweet.tweet }}</h5>
+                     <small>{{ tweet.created_at }}</small>
+                   </div>
+                 </a>
+              </div>
+              {% endfor %}
+
+            </div>
+          </div>
+          <div class="col-md-5">
+            <h1>Donald Trump</h1>
+            <div class="well">
+
+              {% for tweet in trumptweets %}
+              <div class="list-group">
+                 <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                   <div class="d-flex w-100 justify-content-between">
+                     <img src="{{tweet.headshot_url}}" class="w-12 p-1 float-left image-thumbnail">
+                     <h5 class="ml-10 w-75 mb-1">{{ tweet.tweet }}</h5>
+                     <small>{{ tweet.created_at }}</small>
+                   </div>
+                 </a>
+              </div>
+              {% endfor %}
+
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
 
         <div class="footer">
           <i class="fa fa-share" aria-hidden="true"></i>
