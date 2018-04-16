@@ -21,12 +21,13 @@ today = datetime.date.today()
 diff = today - inauguration45
 day = diff.days
 date = inauguration44 + datetime.timedelta(days=day)
+date44 = date.strftime('%-m/%d/%Y')
 
 @app.route('/')
 def index():
     today = str(datetime.date.today())
     username45 = '@realDonaldTrump'
-    return render_template('layout.html', day=day, date=date, today=today,
+    return render_template('layout.html', day=day, date=date44, today=today,
         trumptweets=get_trump_tweets(username45), text=get_obama_tweets())
 
 def get_obama_tweets():
@@ -47,9 +48,9 @@ def get_obama_tweets():
     date_to = browser.find_element_by_xpath("//*[@id='dijit_form_DateTextBox_1']")
     button = browser.find_element_by_xpath("//*[@id='advancedForm']/span/input")
     date_from.clear()
-    date_from.send_keys('4/15/2010')
+    date_from.send_keys(date44)
     date_to.clear()
-    date_to.send_keys('4/15/2010')
+    date_to.send_keys(date44)
     search_from = browser.find_element_by_xpath("//*[@id='dijit_form_Select_1']/tbody/tr/td[2]/input").click()
     from_drop_down = browser.find_element_by_xpath("//*[@id='dijit_MenuItem_8_text']").click()
 
