@@ -62,13 +62,31 @@ def get_obama_tweets():
     search_terms.send_keys('white')
     search_terms.submit()
     WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//*[@id='pi_widget_twitter_TweetWidget_0']/div[1]/div/table/tbody/tr/td[2]/span"))).text
-
-    obamatweets = []
     results = browser.find_element_by_xpath("//*[@id='filterPane']/div/div[2]/div/ul/li[2]").text
+
+    #store text and img in dict
+    obamatweets = {}
+    obamatweets['text'] = {}
+    obamatweets['img'] = {}
+    words = []
+    imgs = []
+
     number = ''.join(x for x in results if x.isdigit())
+    keys = range(int(number))
+
+    #add text to dict
     for i in range(int(number)):
-        text = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[2]/span" %i).text
-        obamatweets.append(text)
+        values = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[2]/span" %i).text
+        words.append(values)
+    for j in keys:
+        obamatweets['text'][j] = words[j]
+
+    #add img to dict
+    for i in range(int(number)):
+        img = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[1]/a/img" %i).get_attribute('src')
+        imgs.append(img)
+    for j in keys:
+        obamatweets['img'][j] = imgs[j]
     return obamatweets
 
 def get_trump_tweets(username45):

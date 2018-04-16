@@ -15,16 +15,18 @@
             <h1>Barack Obama</h1>
             <div class="well">
 
-              {% for tweet in obamatweets %}
+              {% for key, value in obamatweets.items() %}
+              {% for key2 in value.items() %}
               <div class="list-group">
                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
                    <div class="d-flex w-100 justify-content-between">
-                     <img src="{{tweet.headshot_url}}" class="w-12 p-1 float-left image-thumbnail">
-                     <h5 class="ml-10 w-75 mb-1">{{ tweet }}</h5>
-                     <small>{{ tweet.created_at }}</small>
+                     <img src="{{ key2 }}" class="w-12 p-1 float-left image-thumbnail">
+                     <h5 class="ml-10 w-75 mb-1">{{ key2 }}</h5>
+                     <small>{{ created_at }}</small>
                    </div>
                  </a>
               </div>
+              {% endfor %}
               {% endfor %}
 
             </div>
