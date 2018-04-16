@@ -28,7 +28,7 @@ def index():
     today = str(datetime.date.today())
     username45 = '@realDonaldTrump'
     return render_template('layout.html', day=day, date=date44, today=today,
-        trumptweets=get_trump_tweets(username45), text=get_obama_tweets())
+        trumptweets=get_trump_tweets(username45), obamatweets=get_obama_tweets())
 
 def get_obama_tweets():
     option = webdriver.ChromeOptions()
@@ -61,9 +61,15 @@ def get_obama_tweets():
     search_terms = browser.find_element_by_xpath("//*[@id='dijit_form_ValidationTextBox_0']")
     search_terms.send_keys('white')
     search_terms.submit()
-    text = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//*[@id='pi_widget_twitter_TweetWidget_0']/div[1]/div/table/tbody/tr/td[2]/span"))).text
+    WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//*[@id='pi_widget_twitter_TweetWidget_0']/div[1]/div/table/tbody/tr/td[2]/span"))).text
 
-    return text
+    obamatweets = []
+    results = browser.find_element_by_xpath("//*[@id='filterPane']/div/div[2]/div/ul/li[2]").text
+    number = ''.join(x for x in results if x.isdigit())
+    for i in range(int(number)):
+        text = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[2]/span" %i).text
+        obamatweets.append(text)
+    return obamatweets
 
 def get_trump_tweets(username45):
     trumptweets = tweepy.user_timeline(username45)
