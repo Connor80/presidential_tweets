@@ -6,9 +6,6 @@ h1 {
     float: left;
     width: 50%;
 }
-.flex-grow {
-    flex: 1 0 auto;
-}
 
 .row:after {
     content: "";
