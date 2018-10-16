@@ -26,13 +26,15 @@ date44 = date.strftime('%-m/%d/%Y')
 @app.route('/')
 def index():
     today = str(datetime.date.today())
-    username45 = '@realDonaldTrump'
+    username45 = '@WhiteHouse'
     return render_template('layout.html', day=day, date=date44, today=today,
         trumptweets=get_trump_tweets(username45), obamatweets=get_obama_tweets())
 
 def get_obama_tweets():
     option = webdriver.ChromeOptions()
-    option.add_argument(" — incognito")
+    option.add_argument("--incognito")
+    #option.add_argument("--headless")
+    option.add_argument("--window-size=1200,1100")
     path = app.config['PATH']
     browser = webdriver.Chrome(executable_path=path, chrome_options=option)
     browser.get("http://obamawhitehouse.gov.archivesocial.com")
@@ -42,6 +44,7 @@ def get_obama_tweets():
     tab = browser.find_element_by_xpath("//*[@id='notebook']/div[2]/ul/li[2]/a").click()
     date_drop_down = browser.find_element_by_xpath("//*[@id='dijit_form_Select_0']/tbody/tr/td[2]/input").click()
     custom = browser.find_element_by_xpath("//*[@id='dijit_MenuItem_6_text']").click()
+
 
     #clear default dates, enter search date, and change search to 'from'
     date_from = browser.find_element_by_xpath("//*[@id='dijit_form_DateTextBox_0']")
@@ -61,32 +64,33 @@ def get_obama_tweets():
     search_terms = browser.find_element_by_xpath("//*[@id='dijit_form_ValidationTextBox_0']")
     search_terms.send_keys('white')
     search_terms.submit()
-    WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//*[@id='pi_widget_twitter_TweetWidget_0']/div[1]/div/table/tbody/tr/td[2]/span"))).text
-    results = browser.find_element_by_xpath("//*[@id='filterPane']/div/div[2]/div/ul/li[2]").text
+
+    #check if there are archived tweets for today, handle error if not
+    try:
+        WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//*[@id='pi_widget_twitter_TweetWidget_0']/div[1]/div/table/tbody/tr/td[2]/span"))).text
+        results = browser.find_element_by_xpath("//*[@id='filterPane']/div/div[2]/div/ul/li[2]").text
+    except TimeoutException:
+        print("No Tweets Found")
 
     #store text and img in dict
     obamatweets = {}
-    obamatweets['text'] = {}
-    obamatweets['img'] = {}
     words = []
     imgs = []
 
     number = ''.join(x for x in results if x.isdigit())
     keys = range(int(number))
 
-    #add text to dict
-    for i in range(int(number)):
+    #add tweet text to array
+    for i in keys:
         values = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[2]/span" %i).text
         words.append(values)
+    #add tweet img to array
     for j in keys:
-        obamatweets['text'][j] = words[j]
-
-    #add img to dict
-    for i in range(int(number)):
         img = browser.find_element_by_xpath("//*[@id='pi_widget_twitter_TweetWidget_%d']/div[1]/div/table/tbody/tr/td[1]/a/img" %i).get_attribute('src')
         imgs.append(img)
-    for j in keys:
-        obamatweets['img'][j] = imgs[j]
+    #add both arrays to key in dict
+    for m in keys:
+        obamatweets[m] = words[m], imgs[m]
     return obamatweets
 
 def get_trump_tweets(username45):
